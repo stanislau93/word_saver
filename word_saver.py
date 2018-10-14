@@ -7,7 +7,7 @@ class WordSaver(object):
 
 	def __init__(self, filename):
 		self.filename = filename
-		self.file = self.get_file('a+')
+		self.file = self.get_file('a+', 'utf-8')
 
 	def run_word_saver(self, words, make_output):
 		self.output = ''
@@ -38,9 +38,9 @@ class WordSaver(object):
 		words_number = len(self.get_file_content_delimited())
 		self.output += 'Total words number is %d\n' % words_number
 
-	def get_file(self, mode):
+	def get_file(self, mode, encoding):
 		try:
-			return open(self.filename, mode)
+			return open(self.filename, mode, encoding=encoding)
 		except:
 			print("File %s does not exist or is corrupted" % self.filename)
 			exit()
@@ -51,7 +51,7 @@ class WordSaver(object):
 	def get_file_content_delimited(self, delimiter=','):
 		self.file.seek(0)
 		content = self.file.read()
-		return [] if content == '' else content.split(',')
+		return [] if content == '' else list(filter(len, content.split(',')))
 
 	def set_tremas_and_lower(self, word):
 		return word.replace('a:','ä').replace('o:', 'ö').lower()
